@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高校行政岗招聘信息周报</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 25px;
+            background: linear-gradient(120deg, #1a6dcc, #0d4a9e);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(13, 74, 158, 0.2);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .date-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .summary {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1a6dcc;
+        }
+        
+        .summary h2 {
+            color: #1a6dcc;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .summary ul {
+            padding-left: 20px;
+        }
+        
+        .summary li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .job-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .card-header {
+            background: linear-gradient(120deg, #0d4a9e, #1a6dcc);
+            color: white;
+            padding: 18px;
+            position: relative;
+        }
+        
+        .university {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .position {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .detail-label {
+            flex: 0 0 100px;
+            font-weight: 600;
+            color: #0d4a9e;
+            font-size: 0.95rem;
+        }
+        
+        .detail-value {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+        
+        .requirements {
+            background: #f8fafd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border-left: 3px solid #4a9eff;
+        }
+        
+        .requirements ul {
+            padding-left: 20px;
+        }
+        
+        .requirements li {
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .deadline {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px 0 15px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .note {
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 600px) {
+            .detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                margin-bottom: 5px;
+                flex: 0 0 100%;
+            }
+            
+            .detail-value {
+                flex: 0 0 100%;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .university {
+                font-size: 1.15rem;
+            }
+            
+            .position {
+                font-size: 1rem;
+            }
+            
+            .card-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>高校行政岗招聘信息周报</h1>
+            <p class="subtitle">最新高校行政岗位招聘信息汇总</p>
+            <div class="date-badge">
+                <i class="fas fa-calendar-alt"></i> 更新日期: 2025年6月
+            </div>
+        </header>
+        
+        <section class="summary">
+            <h2><i class="fas fa-info-circle"></i> 本周招聘概况</h2>
+            <ul>
+                <li><strong>学历要求</strong>: 多数岗位要求硕士及以上学历</li>
+                <li><strong>工作经验</strong>: 部分岗位需3年以上相关经验</li>
+                <li><strong>年龄限制</strong>: 普遍要求35周岁以下</li>
+                <li><strong>用工方式</strong>: 劳务派遣为主，部分为合同聘用制</li>
+                <li><strong>岗位分布</strong>: 教务管理、行政助理、项目专员等为主</li>
+            </ul>
+        </section>
+        
+        <!-- 重庆大学 -->
+        <div class="job-card">
+            <div class="card-header">
+                <div class="university">重庆大学自动化学院</div>
+                <div class="position">管理人员 (1人)</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i> 重庆虎溪校区
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="detail-row">
+                    <div class="detail-label">用工方式</div>
+                    <div class="detail-value">劳务派遣</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">岗位职责</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>协助团队开展科研项目的管理与实施工作</li>
+                                <li>协助团队支撑立项文件撰写</li>
+                                <li>团队成果PPT制作和知识产权文档撰写</li>
+                                <li>协助项目负责人完成实验室日常事务管理</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">任职条件</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>身心健康，品行端正，爱岗敬业</li>
+                                <li>本科及以上学历，年龄40周岁以下</li>
+                                <li>较强的沟通协调、语言表达及公文写作能力</li>
+                                <li>熟练使用常用办公软件，开展信息化管理工作</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">截止日期</div>
+                    <div class="detail-value">
+                        <span class="deadline">2025年6月30日12:00</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">来源</div>
+                    <div class="detail-value">重庆大学人事处</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 复旦大学 -->
+        <div class="job-card">
+            <div class="card-header">
+                <div class="university">复旦大学上海医学院</div>
+                <div class="position">行政管理助理 (1人)</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i> 上海市徐汇区
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="detail-row">
+                    <div class="detail-label">用工方式</div>
+                    <div class="detail-value">劳务派遣</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">岗位职责</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>医院管理处管理相关工作</li>
+                                <li>部门内部日常运行的支持与保障</li>
+                                <li>领导交办的其他工作</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">任职条件</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>政治立场坚定，具有良好的政治素质和道德水平</li>
+                                <li>本科学历，学士以上学位</li>
+                                <li>学习能力强，较好的文字功底和数据分析能力</li>
+                                <li>应届毕业生年龄不超过30周岁</li>
+                                <li>具有工作经验者，年龄不超过40周岁</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">截止日期</div>
+                    <div class="detail-value">
+                        <span class="deadline">2025年6月30日</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">来源</div>
+                    <div class="detail-value">上海医学院医院管理处</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 西安交通大学 -->
+        <div class="job-card">
+            <div class="card-header">
+                <div class="university">西安交通大学化学学院</div>
+                <div class="position">研究生教务辅助 (1人)</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i> 创新港校区
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="detail-row">
+                    <div class="detail-label">用工方式</div>
+                    <div class="detail-value">劳务派遣</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">岗位职责</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>协助各类研究生招生的报名、审核及数据报送</li>
+                                <li>协助培养方案制定与实施</li>
+                                <li>研究生培养计划制定与调整</li>
+                                <li>研究生毕设送审审核、答辩审批等</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">任职条件</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>身心健康，品行端正，遵纪守法</li>
+                                <li>硕士学历学位，年龄一般不超过30周岁</li>
+                                <li>具备较强的组织协调、沟通合作能力</li>
+                                <li>一定的英语沟通能力和计算机技术基础</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">截止日期</div>
+                    <div class="detail-value">
+                        <span class="deadline">2025年6月22日</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">来源</div>
+                    <div class="detail-value">西安交通大学人力资源部</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 华中师范大学 -->
+        <div class="job-card">
+            <div class="card-header">
+                <div class="university">华中师范大学培训中心</div>
+                <div class="position">市场开拓岗 (1人) · 项目策划岗 (1人)</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i> 湖北省武汉市
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="detail-row">
+                    <div class="detail-label">用工方式</div>
+                    <div class="detail-value">合同聘用制B类岗</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">岗位职责</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li><strong>市场开拓岗</strong>: 市场调研分析，开拓培训市场</li>
+                                <li><strong>项目策划岗</strong>: 培训项目方案设计与研发</li>
+                                <li>制定培训项目实施方案</li>
+                                <li>培训项目管理与组织实施</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">任职条件</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>政治素质高，遵纪守法，品行端正</li>
+                                <li>具有良好的职业道德素养和团队协作意识</li>
+                                <li>专业基础扎实，具备岗位所需理论知识和业务能力</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">截止日期</div>
+                    <div class="detail-value">
+                        <span class="deadline">2025年6月20日</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">来源</div>
+                    <div class="detail-value">华中师范大学人事处</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 北京师范大学物理与天文学院 -->
+        <div class="job-card">
+            <div class="card-header">
+                <div class="university">北京师范大学物理与天文学院</div>
+                <div class="position">研究生教务秘书 (1人)</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i> 北京海淀校区
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="detail-row">
+                    <div class="detail-label">用工方式</div>
+                    <div class="detail-value">劳动合同制</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">岗位职责</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>负责研究生教务工作</li>
+                                <li>研究生招生、培养与学位管理</li>
+                                <li>教学管理及课程安排</li>
+                                <li>完成领导交办的其他工作</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">任职条件</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>拥护党的领导，遵纪守法</li>
+                                <li>硕士及以上学历，年龄一般不超过35周岁</li>
+                                <li>物理学相关学科背景、教务工作经历者优先</li>
+                                <li>良好的英语水平和计算机操作能力</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">截止日期</div>
+                    <div class="detail-value">
+                        <span class="deadline">2025年6月15日</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">来源</div>
+                    <div class="detail-value">北京师范大学人才发展办公室</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 北京师范大学艺术与传媒学院 -->
+        <div class="job-card">
+            <div class="card-header">
+                <div class="university">北京师范大学艺术与传媒学院</div>
+                <div class="position">行政助理 (1人)</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i> 北京海淀校区
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="detail-row">
+                    <div class="detail-label">用工方式</div>
+                    <div class="detail-value">院聘劳动合同制</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">岗位职责</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>学院行政的沟通联络、统筹协调</li>
+                                <li>会议筹备、信息上报、管理平台维护</li>
+                                <li>相关文件的起草等文字工作</li>
+                                <li>完成部门其他事务</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">任职条件</div>
+                    <div class="detail-value">
+                        <div class="requirements">
+                            <ul>
+                                <li>拥护党的领导，身心健康</li>
+                                <li>硕士研究生及以上学位，年龄35岁以下</li>
+                                <li>逻辑思维强，文字表达能力强</li>
+                                <li>熟练掌握office办公软件</li>
+                                <li>踏实肯干，服从工作安排</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">截止日期</div>
+                    <div class="detail-value">
+                        <span class="deadline">2025年6月17日</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">来源</div>
+                    <div class="detail-value">北京师范大学人才发展办公室</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 高校行政岗招聘信息周报</p>
+            <p class="note">信息仅供参考，请以各高校官方招聘公告为准</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 为截止日期小于7天的添加特殊样式
+        document.addEventListener('DOMContentLoaded', function() {
+            const deadlines = document.querySelectorAll('.deadline');
+            const today = new Date(2025, 5, 3); // 假设今天是2025年6月3日
+            const sevenDaysLater = new Date(today);
+            sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+            
+            deadlines.forEach(deadline => {
+                const dateText = deadline.textContent;
+                const deadlineDate = new Date(2025, parseInt(dateText.split('年')[1].split('月')[0]) - 1, 
+                                            parseInt(dateText.split('月')[1].split('日')[0]));
+                
+                if (deadlineDate < sevenDaysLater) {
+                    deadline.style.background = 'linear-gradient(120deg, #ff6b6b, #ff0000)';
+                    deadline.style.fontWeight = 'bold';
+                    deadline.innerHTML += ' <i class="fas fa-exclamation-circle"></i>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
